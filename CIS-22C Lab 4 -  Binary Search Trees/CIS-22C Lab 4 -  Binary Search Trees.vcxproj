@@ -134,6 +134,9 @@
     <ClInclude Include="BST_ADT.h" />
     <ClInclude Include="Currency.h" />
     <ClInclude Include="Dollar.h" />
+    <ClInclude Include="LinkNode.h" />
+    <ClInclude Include="Queue.h" />
+    <ClInclude Include="SinglyLinkedList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

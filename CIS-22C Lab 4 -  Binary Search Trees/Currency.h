@@ -1,5 +1,5 @@
 /* CIS-22C
-*  Lab 4
+*  Lab 4 - Binary Search Trees
 *  Spencer Bledsoe
 */
 
@@ -11,6 +11,7 @@
 	- Subtraction Method now handles negative coin values properly with the addition of a new "if" statement.
 	- New logic for <(), >() overloads to correct logic errors. Old implementation for '>' would return false if currency > secondObj.currency if coin < secondObj.coin
 	- Added a "friend" function to overload << ostream operator.
+	- Added 'getData method to return currency
 *************************************************************************************************************************************************************************/
 
 #pragma once
@@ -102,10 +103,17 @@ public:
 	*/
 	bool isEqual(Currency* y) const { return (this == y); }
 	bool isGreater(Currency* y) const { return (this > y); }
+
+	std::string getData() {
+		std::string str;
+		str.append(getCurr() + "." + getCoin());
+		return str;
+	}
+
+	void print() {
 	/*Pre: None
 	Post: Prints this.currency && this.coin to console.
 	*/
-	void print() {
 		std::cout << getCurr() << "." << std::setw(2) << std::setfill('0') << std::right << getCoin() << " " << getType();
 		return;
 	}

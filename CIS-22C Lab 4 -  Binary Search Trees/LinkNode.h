@@ -1,15 +1,13 @@
 /* CIS-22C
-*  Lab 4 - Binary Search Trees
+*  Lab 4
 *  Spencer Bledsoe
 */
-
 #pragma once
-
 #include "Currency.h"
 
-struct BSTNode {
+struct LinkNode {
 public:
 	Currency* data;
-	BSTNode* left;
-	BSTNode* right;
+	LinkNode* next;
 };
+

@@ -1,5 +1,5 @@
 /* CIS-22C
-*  Lab 4
+*  Lab 4 - Binary Search Trees
 *  Spencer Bledsoe
 */
 
@@ -7,11 +7,11 @@
 							CODE MODIFIED FROM PREVIOUS LAB
 
 	- "const" added to currType, ensuring no unwanted modifications.
+	- Removed unnecessary #include <string>. Already included in Currency.h
 *****************************************************************************/
 
 #pragma once
 #include "Currency.h"
-#include <string>
 
 class Dollar : public Currency {
 private:
