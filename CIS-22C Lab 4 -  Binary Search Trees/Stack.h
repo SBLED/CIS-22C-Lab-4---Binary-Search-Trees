@@ -61,22 +61,13 @@ public:
 		Post: Returns a copy of the Currency object at the top of the stack.
 		*/
 
-		try {
-			if (start != NULL) {
-				return start->data;
-			}
-
-			else {
-				throw std::runtime_error("peek() called on empty stack.");
-			}
-
+		if (start != NULL) {
+			return start->data;
 		}
 
-		catch (std::runtime_error& excpt) {
-			std::cout << "Error: " << excpt.what() << std::endl;
+		else {
 			return NULL;
 		}
-
 	}
 
 	std::string printStack() {

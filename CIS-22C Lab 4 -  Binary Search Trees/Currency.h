@@ -9,6 +9,7 @@
 	- Exception handling changed to throw/catch invalid_argument type instead of string type per exception handling guidelines in Zybooks Ch 1.51.
 		- Affects add(), subtract(), ==(), >(), <()
 	- Subtraction Method now handles negative coin values properly with the addition of a new "if" statement.
+	- Adjusted double constructor to round correctly. Certain values would not cast correctly, e.g. '32.23' rounding to 32.22, using the old method.
 	- New logic for <(), >() overloads to correct logic errors. Old implementation for '>' would return false if currency > secondObj.currency if coin < secondObj.coin
 	- Added a "friend" function to overload << ostream operator.
 *************************************************************************************************************************************************************************/
@@ -32,7 +33,7 @@ public:
 
 	Currency(double inCurr) {
 		currency = static_cast<int>(inCurr);
-		coin = static_cast<int>((inCurr * 100) - (currency * 100));
+		coin = static_cast<int>((inCurr * 100) - (currency * 100) + 0.5);
 	}
 
 	Currency(Currency& t) {
