@@ -16,6 +16,7 @@ using namespace std;
 
 void Welcome();
 void Goodbye();
+void Menu();
 
 int main() {
 
@@ -23,7 +24,8 @@ int main() {
 
     Welcome();
 
-    double initValArr[20] = {
+    const int arrSize = 20;
+    double initValArr[arrSize] = {
     57.12,    //Index 0
     23.44,    //Index 1
     87.43,    //Index 2
@@ -45,8 +47,8 @@ int main() {
     251.00,   //Index 18
     151.00 }; //Index 19
 
-    Currency* currArray[20];
-    for (int i = 0; i < 20; i++) {
+    Currency* currArray[arrSize];
+    for (int i = 0; i < arrSize; i++) {
         currArray[i] = new Dollar(initValArr[i]);
     }
 
@@ -58,32 +60,22 @@ int main() {
         system("Pause");
         return -1;
     }
+    BST_ADT* BSTree = new BST_ADT();
+    for (int i = 0; i < arrSize; i++) {
+       BSTree->insert(*currArray[i]);
+    }
     
     ///////////////////////////// Perform traversal operations //////////////////////////////////////////////////////
 
     // Breadth-first traversal
-
-        // Write output to both screen and file
-
-
-
+    outFile << BSTree->breadthFirst() << endl;
     // In-order traversal
-
-        // Write output to both screen and file
-
-
-
+    outFile << BSTree->inOrder() << endl;
     // Pre-order traversal
-
-        // Write output to both screen and file
-
-
-
+    outFile << BSTree->preOrder() << endl;
     // Post-order traversal
-
-        // Write output to both screen and file
-
-
+    outFile << BSTree->postOrder() << endl;
+    BSTree->print();
 
     // Provide interactivity for the user to add/search/delete nodes from the console after the data has been seeded into the application.
         // input data validation when reading data from the user into the tree 
@@ -92,6 +84,7 @@ int main() {
 
 
     // Provide the user the option to print output of traversals or exit the program.
+    Menu();
 
         // Once the user selects the option to print data or exits the program, 
         // - the data in the BST should be printed out to both screen and output file in all four traversal methods in the specific sequence of breadth-first, in-order, pre-order, post-order. 
@@ -101,9 +94,11 @@ int main() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     outFile.close();
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < arrSize; i++) {
         delete currArray[i];
     }
+
+    delete BSTree;
 
     Goodbye();
     system("Pause");
@@ -117,5 +112,17 @@ void Welcome() {
 
 void Goodbye() {
     cout << "Exiting program..." << endl;
+    return;
+}
+
+void Menu() {
+    cout << "To Exit the program, enter 'q'. \n";
+    cout << "Otherwise: \n";
+    cout << "Enter 1 to add a node.\n";
+    cout << "Enter 2 to search for a node.\n";
+    cout << "Enter 3 to delete a node.\n\n";
+    cout << "Please enter your selection: ";
+
+
     return;
 }

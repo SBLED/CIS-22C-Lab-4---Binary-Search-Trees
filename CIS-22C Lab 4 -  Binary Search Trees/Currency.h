@@ -11,7 +11,6 @@
 	- Subtraction Method now handles negative coin values properly with the addition of a new "if" statement.
 	- New logic for <(), >() overloads to correct logic errors. Old implementation for '>' would return false if currency > secondObj.currency if coin < secondObj.coin
 	- Added a "friend" function to overload << ostream operator.
-	- Added 'getData method to return currency
 *************************************************************************************************************************************************************************/
 
 #pragma once
@@ -71,6 +70,7 @@ public:
 				throw std::invalid_argument("addition");
 			}
 		}
+
 		catch (std::invalid_argument& excpt) {
 			std::cout << "Invalid " << excpt.what() << std::endl;
 		}
@@ -92,6 +92,7 @@ public:
 				throw std::invalid_argument("subtraction");
 			}
 		}
+
 		catch (std::invalid_argument& excpt) {
 			std::cout << "Invalid " << excpt.what() << std::endl;
 		}
@@ -103,12 +104,6 @@ public:
 	*/
 	bool isEqual(Currency* y) const { return (this == y); }
 	bool isGreater(Currency* y) const { return (this > y); }
-
-	std::string getData() {
-		std::string str;
-		str.append(getCurr() + "." + getCoin());
-		return str;
-	}
 
 	void print() {
 	/*Pre: None
@@ -138,6 +133,7 @@ bool Currency::operator==(const Currency& y) const {
 			return (this->getCurr() == y.getCurr() && this->getCoin() == y.getCoin());
 		}
 	}
+
 	catch (std::invalid_argument& excpt) {
 		std::cout << "Invalid comparison: Currency Type Mismatch for operator " << excpt.what() << std::endl;
 		return false;
@@ -167,6 +163,7 @@ bool Currency::operator > (const Currency& y) const {
 		}
 
 	}
+
 	catch (std::invalid_argument& excpt) {
 		std::cout << "Invalid comparison: Currency Type Mismatch for operator " << excpt.what() << std::endl;
 		return false;
@@ -195,6 +192,7 @@ bool Currency::operator < (const Currency& y) const {
 		}
 
 	}
+
 	catch (std::invalid_argument& excpt) {
 		std::cout << "Invalid comparison: Currency Type Mismatch for operator " << excpt.what() << std::endl;
 		return false;

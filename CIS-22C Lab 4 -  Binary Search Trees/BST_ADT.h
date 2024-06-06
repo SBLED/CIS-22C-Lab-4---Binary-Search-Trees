@@ -6,6 +6,7 @@
 #pragma once
 #include "BSTNode.h"
 #include "Queue.h"
+#include "Stack.h"
 #include <vector>
 
 class BST_ADT {
@@ -13,6 +14,11 @@ private:
     int height;
     BSTNode* root;
 
+
+    std::string breadthFirstTraversal(BSTNode*);
+    std::string inOrderTraversal(BSTNode*);
+    std::string preOrderTraversal(BSTNode*);
+    std::string postOrderTraversal(BSTNode*);
 
 public:
 
@@ -25,7 +31,23 @@ public:
         while (root != NULL) {
             BSTNode* iterator = root;
             //logic to progress in order traversal deleting each node;
-            delete iterator;
+            Stack stack;
+            stack.push(*root->data);
+
+            while (!(stack.peek() == NULL)) {
+                iterator = search(*stack.peek()); // sets iterator to node containing the top of stack's Currency obj.
+                stack.pop();
+
+                if (iterator->left != NULL) {
+                    stack.push(*iterator->left->data);
+                }
+
+                if (iterator->right != NULL) {
+                    stack.push(*iterator->right->data);
+                }
+
+                delete iterator;
+            }
         }
     }
 
@@ -33,17 +55,16 @@ public:
 	void insert(Currency&);
     Currency* remove(Currency&);
 
-    std::string breadthFirstTraversal(BSTNode*);
-    std::string inOrderTraversal(BSTNode*);
-    std::vector<Currency*> inOrder(BSTNode*, std::string&);
-    std::string preOrderTraversal(BSTNode*);
-    std::string postOrderTraversal(BSTNode*);
+
+    std::string breadthFirst();
+    std::string inOrder();
+    std::string preOrder();
+    std::string postOrder();
 
     int getHeight(BSTNode*);
     void print();
     int count();
     bool isEmpty();
-    //empty?
 
 };
 
@@ -78,9 +99,10 @@ void BST_ADT::insert(Currency& newCurr) {
 
     //Create new node named 'node'
     BSTNode* newNode = new BSTNode();
+    newNode->data = &newCurr;
 
-	if (this->root == NULL) {
-        this->root = newNode;
+	if (root == NULL) {
+        root = newNode;
 	}
 	else {
         BSTNode* currNode;
@@ -185,10 +207,10 @@ Currency* BST_ADT::remove(Currency& newData) {
     return NULL; // Node not found
 }
 
-std::string breadthFirstTraversal(BSTNode* currNode) {
+std::string BST_ADT::breadthFirstTraversal(BSTNode* currNode) {
     /*Pre: The current Node must not be NULL. Tree may not be empty.
-    *Post: Prints the tree in level-order (breadth-first).
-    *Return: Void
+    *Post: None
+    *Return: Returns a string containing the space-separated Currency values from the BST nodes in level-order.
     */
 
     try {
@@ -196,127 +218,129 @@ std::string breadthFirstTraversal(BSTNode* currNode) {
             throw std::runtime_error("Method breadthFirstTraversal called on an empty tree.");
         }
         else {
-
             // Set tempNode to root
             BSTNode* tempNode = currNode;
+
             // create Queue
-            Queue queue;
-            queue.enqueue(*currNode->data);
+            Queue* queue = new Queue;
+            queue->enqueue(*currNode->data);
+
+            // create stringstream to capture traversal data vals
+            std::stringstream ss;
 
             // loop while tempNode != NULL
-            while (!queue.isEmpty()) {
+            while (!queue->isEmpty()) {
+                tempNode = search(*queue->dequeue());
 
                 // process tempNode
-                if (tempNode != NULL) {
+                if (tempNode != NULL && tempNode->data != NULL) {
+                    ss << "$" << tempNode->data->getCurr() << "." << tempNode->data->getCoin() << " ";
+                    
                     if (tempNode->left != NULL) {
-                        queue.enqueue(*tempNode->left->data);
+                        queue->enqueue(*tempNode->left->data);
                     }
                     if (tempNode->right != NULL) {
-                        queue.enqueue(*tempNode->right->data);
+                        queue->enqueue(*tempNode->right->data);
                     }
-                    // if (!queue.isEmpty())
-                        // tempNode->data = queue.dequeue();
-                    // else
-                        // tempNode = NULL;
                 }
             }
 
-            //delete queue;
+            delete queue;
 
-
-
-            return;
+            return ss.str();
         }
     }
 
     catch (std::runtime_error& excpt) {
         std::cout << "Error: " << excpt.what() << std::endl;
-        return;
+        return "";
     }
+}
+
+std::string BST_ADT::breadthFirst() {
+    return breadthFirstTraversal(root);
 }
 
 std::string BST_ADT::inOrderTraversal(BSTNode* currNode){
     /*Pre: Root node must exist. currNode must not be NULL.
-    *Post: Prints the tree in order of smallest to largest values.
-    *Return: Void
+    *Post: None.
+    *Return: Returns a string containing the space-separated Currency values from the BST nodes in order.
     */
-    std::string str = "";
-    inOrder(currNode, str);
 
-
-    return str;
-
-}
-
-std::vector<Currency*> BST_ADT::inOrder(BSTNode* currNode, std::string& str) {
-    try {
-        if (currNode == NULL) {
-            throw std::runtime_error("Method inOrderTraversal called on an empty tree.");
-        }
-        else {
-            std::string str;
-            inOrderTraversal(currNode->left);
-            str.append(currNode->data->getData());
-            inOrderTraversal(currNode->right);
-
-            return;
-        }
+    if (currNode == NULL) {
+        return "";
     }
+    else {
+        std::stringstream ss;
 
-    catch (std::runtime_error& excpt) {
-        std::cout << "Error: " << excpt.what() << std::endl;
-        return;
+
+        inOrderTraversal(currNode->left);
+
+        if (currNode->data != NULL) {
+            ss << "$" << currNode->data->getCurr() << "." << currNode->data->getCoin() << " ";
+        }
+
+        inOrderTraversal(currNode->right);
+
+        return ss.str();
     }
 }
 
-std::string preOrderTraversal(BSTNode* currNode) {
+std::string BST_ADT::inOrder() {
+    return inOrderTraversal(root);
+}
+
+std::string BST_ADT::preOrderTraversal(BSTNode* currNode) {
     /*Pre: The current Node must not be NULL. Tree may not be empty.
-    *Post: Prints the tree in pre-order.
-    *Return: Void
+    *Post: None.
+    *Return: Returns a string containing the space-separated Currency values from the BST nodes in pre-order.
     */
 
-    try {
-        if (currNode == NULL) {
-            throw std::runtime_error("Method preOrderTraversal called on an empty tree.");
-        }
-        else {
-            currNode->data->print();
-            preOrderTraversal(currNode->left);
-            preOrderTraversal(currNode->right);
-
-            return;
-        }
+    if (currNode == NULL) {
+        return "";
     }
+    else {
+        std::stringstream ss;
 
-    catch (std::runtime_error& excpt) {
-        std::cout << "Error: " << excpt.what() << std::endl;
-        return;
+        if (currNode->data != NULL) {
+            ss << "$" << currNode->data->getCurr() << "." << currNode->data->getCoin() << " ";
+        }
+        preOrderTraversal(currNode->left);
+        preOrderTraversal(currNode->right);
+
+        return ss.str();
     }
 }
 
-std::string postOrderTraversal(BSTNode* currNode) {
+std::string BST_ADT::preOrder() {
+    return preOrderTraversal(root);
+}
+
+std::string BST_ADT::postOrderTraversal(BSTNode* currNode) {
     /*Pre: The current Node must not be NULL. Tree may not be empty.
-    *Post: Prints the tree in post-order.
-    *Return: Void
+    *Post: None.
+    *Return: Returns a string containing the space-separated Currency values from the BST nodes in post-order.
     */
 
-    try {
         if (currNode == NULL) {
-            throw std::runtime_error("Method postOrderTraversal called on an empty tree.");
+            return "";
         }
         else {
-            postOrderTraversal(currNode->left);
-            postOrderTraversal(currNode->right);
-            currNode->data->print();
 
-            return;
+            std::stringstream ss;
+
+            ss << postOrderTraversal(currNode->left);
+            ss << postOrderTraversal(currNode->right);
+            if (currNode->data != NULL) {
+                ss << "$" << currNode->data->getCurr() << "." << currNode->data->getCoin() << " ";
+            }
+
+            return ss.str();
         }
-    }
+}
 
-    catch (std::runtime_error& excpt) {
-        std::cout << "Error: " << excpt.what() << std::endl;
-        return;
-    }
+std::string BST_ADT::postOrder() {
+    return postOrderTraversal(root);
 }
 
 int BST_ADT::getHeight(BSTNode* currNode) {
@@ -342,18 +366,48 @@ int BST_ADT::getHeight(BSTNode* currNode) {
 
 void BST_ADT::print() {
 
-    std::string strArr[4];
-    int i = 0;
+    std::cout << "Breadth-first traversal: " << breadthFirstTraversal(root) << std::endl;
+    std::cout << "In-order traversal: " << inOrderTraversal(root) << std::endl;
+    std::cout << "Pre-order traversal: " << preOrderTraversal(root) << std::endl;
+    std::cout << "Post-order traversal: " << postOrderTraversal(root) << std::endl;
 
-    strArr[i++] = breadthFirstTraversal(root);
-    strArr[i++] = inOrderTraversal(root);
-    strArr[i++] = preOrderTraversal(root);
-    strArr[i++] = postOrderTraversal(root);
-
+    return;
 }
 
 int BST_ADT::count() {
-    return 1;
+
+    if (root == NULL) {
+        return 0;
+    }
+
+    else {
+        int counter = 0;
+
+        BSTNode* currNode;
+        Stack stack;
+        stack.push(*root->data);
+
+        while (stack.peek() != NULL) {
+
+            currNode = search(*stack.peek());
+            stack.pop();
+
+            if (currNode != NULL) {
+
+                if (currNode->left != NULL) {
+                    stack.push(*currNode->left->data);
+                }
+
+                if (currNode->right != NULL) {
+                    stack.push(*currNode->right->data);
+                }
+
+                counter++;
+            }
+        }
+
+        return counter;
+    }
 }
 
 bool BST_ADT::isEmpty() {
